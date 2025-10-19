@@ -1,6 +1,5 @@
-# template.containerized-provisioning-project
+# GameServers on AWS
 
-[![use-multiple-platforms](https://github.com/mazgi/template.containerized-provisioning-project/actions/workflows/use-multiple-platforms.yml/badge.svg)](https://github.com/mazgi/template.containerized-provisioning-project/actions/workflows/use-multiple-platforms.yml)
 [![use-one-platform](https://github.com/mazgi/template.containerized-provisioning-project/actions/workflows/use-one-platform.yml/badge.svg)](https://github.com/mazgi/template.containerized-provisioning-project/actions/workflows/use-one-platform.yml)
 
 This repository is a template for provisioning your Cloud and Local environment using [Terraform](https://www.terraform.io/) and [Ansible](https://www.ansible.com/).
@@ -21,7 +20,7 @@ You should write your account IDs and credentials depending on your need, such a
 # GID=1234
 # DOCKER_GID=2345
 PROJECT_UNIQUE_ID=my-unique-b78e
-_TERRAFORM_BACKEND_TYPE=azurerm
+_TERRAFORM_BACKEND_TYPE=s3
 TF_VAR_allowed_ipaddr_list=["203.0.113.0/24"]
 #
 # <AWS>
@@ -30,19 +29,6 @@ AWS_ACCOUNT_ID=123456789012
 # AWS_DEFAULT_REGION=us-east-1
 AWS_SECRET_ACCESS_KEY=AWxxxxxxxx00000000
 # </AWS>
-#
-# <Azure>
-# AZURE_DEFAULT_LOCATION=centralus
-ARM_CLIENT_ID=xxxxxxxx-0000-0000-0000-xxxxxxxxxxxx
-ARM_CLIENT_SECRET=********
-ARM_SUBSCRIPTION_ID=yyyyyyyy-0000-0000-0000-yyyyyyyyyyyy
-ARM_TENANT_ID=zzzzzzzz-0000-0000-0000-zzzzzzzzzzzz
-# </Azure>
-#
-# <Google>
-# GCP_DEFAULT_REGION=us-central1
-CLOUDSDK_CORE_PROJECT=my-proj-b78e
-# </Google>
 ```
 
 :information_source: If you are using Linux, write out UID, GID, and GID for the `docker` group, into the `.env` file to let that as exported on Docker Compose as environment variables.
@@ -83,32 +69,6 @@ Environment variable names and uses are as follows.
 | AWS_ACCESS_KEY_ID     | **Yes**           | An AWS Access Key for the IAM user that is used to create the S3 bucket to store tfstate file and apply all in your AWS environment.                  |
 | AWS_SECRET_ACCESS_KEY | **Yes**           |                                                                                                                                                       |
 | AWS_DEFAULT_REGION    | no                |                                                                                                                                                       |
-
-</details>
-<details>
-<summary>
-Azure
-
-You are able to generate Azure Service Principal according to the [how-to-create-azure-service-principal.md](docs/how-to-create-azure-service-principal.md).
-
-</summary>
-
-| Name                   | Required with Azure | Value                                                                                                                                                                                                                  |
-| ---------------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ARM_TENANT_ID          | **Yes**             | A UUID to indicate Azure Tenant.                                                                                                                                                                                       |
-| ARM_SUBSCRIPTION_ID    | **Yes**             | A UUID to indicate Azure Subscription you want to provision.<br/>The Resource Group, Storage Account, and Blob Container are created in this subscription to store the tfstate file if you choose the AzureRM backend. |
-| ARM_CLIENT_ID          | **Yes**             |                                                                                                                                                                                                                        |
-| ARM_CLIENT_SECRET      | **Yes**             |                                                                                                                                                                                                                        |
-| AZURE_DEFAULT_LOCATION | no                  |                                                                                                                                                                                                                        |
-
-</details>
-<details>
-<summary>Google Cloud</summary>
-
-| Name                  | Required with Azure | Value                                                                                                                                                                                                                                                                                                                   |
-| --------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| CLOUDSDK_CORE_PROJECT | **Yes**             | A string Project ID to indicate Google Cloud Project you want to provision, Not Project name or Project number.<br/>The Cloud Storage Bucket is created in this project to store the tfstate file if you choose the GCS backend.<br/>See also https://cloud.google.com/resource-manager/docs/creating-managing-projects |
-| GCP_DEFAULT_REGION    | no                  |                                                                                                                                                                                                                                                                                                                         |
 
 </details>
 

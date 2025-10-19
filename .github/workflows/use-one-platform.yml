@@ -12,8 +12,6 @@ jobs:
       matrix:
         platform:
           - aws
-          - azure
-          - google-cloud
         runs-on:
           - ubuntu-latest
     steps:
@@ -45,31 +43,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - name: Export credentials for Azure
-        if: matrix.platform == 'azure'
-        run: |
-          echo "ARM_CLIENT_ID=${ARM_CLIENT_ID}" >> .env
-          echo "ARM_CLIENT_SECRET=${ARM_CLIENT_SECRET}" >> .env
-          echo "ARM_SUBSCRIPTION_ID=${ARM_SUBSCRIPTION_ID}" >> .env
-          echo "ARM_TENANT_ID=${ARM_TENANT_ID}" >> .env
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-      - name: Export credentials for Google Cloud
-        if: matrix.platform == 'google-cloud'
-        run: |
-          echo "CLOUDSDK_CORE_PROJECT=${CLOUDSDK_CORE_PROJECT}" >> .env
-        env:
-          CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
-      - name: Export GOOGLE_SA_KEY
-        if: matrix.platform == 'google-cloud'
-        run: |
-          echo ${GOOGLE_SA_KEY} > config/credentials/google-cloud-keyfile.provisioning-owner.json
-          jq -e '. | select(.type=="service_account")' config/credentials/google-cloud-keyfile.provisioning-owner.json > /dev/null
-        env:
-          GOOGLE_SA_KEY: ${{ secrets.GOOGLE_SA_KEY }}
       - name: (debug)Check services
         run: |
           docker compose --profile=use-only-${{ matrix.platform }} config provisioning-use-only-${{ matrix.platform }}
