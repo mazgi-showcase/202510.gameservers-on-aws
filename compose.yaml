@@ -46,9 +46,39 @@ x-service-provisioning-base: &provisioning-base
   working_dir: /workspace/provisioning
 
 services:
-  # You are able to implement your service like below.
   provisioning:
     <<: *provisioning-base
+  server:
+    build:
+      args:
+        GID: ${GID:-0}
+        UID: ${UID:-0}
+      context: Dockerfile.d/server.development
+    command:
+      - zsh
+      - --login
+      - -c
+      - |
+        go-inotifywait.zsh
+    environment:
+      - ENV_UNIQUE_ID
+    init: true
+    user: "${UID:-0}:${GID:-0}"
+    volumes:
+      - .:/workspace
+    working_dir: /workspace/server
+  server-prod:
+    build:
+      args:
+        GID: ${GID:-0}
+        UID: ${UID:-0}
+      context: .
+      dockerfile: Dockerfile.d/server.production/Dockerfile
+      target: runner
+    image: local.local/${PROJECT_UNIQUE_ID:-no-name}/server-prod:HEAD
+    pull_policy: never
+    profiles:
+      - prod
 
   # for Prettier Code Formatter
   # ["INFO" - 00:00:00 AM] Attempted to determine module path from /path/to/the/project
