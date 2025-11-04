@@ -1,0 +1,3 @@
+[submodule "amazon-gamelift-toolkit"]
+	path = amazon-gamelift-toolkit
+	url = https://github.com/amazon-gamelift/amazon-gamelift-toolkit.git
